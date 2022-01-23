@@ -8,14 +8,19 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+
 
 class Recipe(models.Model):
 
-    PREPARATION_UNIT = (
-        ('DFT', 'Default'),
-        ('Min', 'Minutos'),
-        ('Seg', 'Segundos'),
-        ('Hor', 'Horas')
+    PREPARATION_TIME_UNIT_CHOICES = (
+        ('Default', 'DFT'),
+        ('Segundos', 'Seg'),
+        ('Minutos', 'Min'),
+        ('Horas', 'Hor'),
+        ('Dias', 'Dia'),
     )
 
     title = models.CharField(max_length=65)
@@ -23,9 +28,9 @@ class Recipe(models.Model):
     slug = models.SlugField()
     preparation_time = models.IntegerField()
     preparation_time_unit = models.CharField(
-        max_length=3,
+        max_length=8,
         default='DFT',
-        choices=PREPARATION_UNIT
+        choices=PREPARATION_TIME_UNIT_CHOICES,
     )
     servings = models.IntegerField()
     servings_unit = models.CharField(max_length=65)
@@ -36,11 +41,16 @@ class Recipe(models.Model):
     is_publisher = models.BooleanField(default=False)
     cover = models.ImageField(upload_to='recipes/covers/%Y/%m/%d')
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True
+        Category, on_delete=models.SET_NULL, blank=True, null=True,
+        default=None,
     )
     author = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True
+        User, on_delete=models.SET_NULL, null=True,
     )
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "Recipe"
+        verbose_name_plural = "Recipes"
