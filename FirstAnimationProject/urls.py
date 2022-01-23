@@ -13,6 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import \
+    settings  # Forma de importar o settings do projeto da melhor maneira
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
@@ -20,3 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('recipes.urls')),  # Home do site
 ]
+
+# Forma de chamar os arquivos no media da raiz
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Forma de chamar os arquivos státicos do programa
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
