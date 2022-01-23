@@ -1,11 +1,11 @@
 {% extends 'global/base.html' %}
 
 {% block title %}
-    Alterável
+{{ title }}
 {% endblock title %}
 
 {% block content %}
-    <div class="main-content main-content-detail container">
-        {% include 'recipes/partials/_recipe.html' %}
-    </div>
+<div class="main-content main-content-detail container">
+    {% include 'recipes/partials/_recipe.html' %}
+</div>
 {% endblock content %}
