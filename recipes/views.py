@@ -13,13 +13,8 @@ def home(request):
 
 
 def category(request, category_id):
-    # Exemplo para pegar valor na query
-    # recipes = models.Recipe.objects.filter(
-    #     category__id=category_id).order_by('?')
 
-    # if not recipes:
-    #     raise Http404('Not found \U0001F606')
-
+    # Iremos receber uma lista para que possamos pegar o primeiro valor
     recipes = get_list_or_404(models.Recipe.objects.filter(
         # Mandamos a query inteira, para podermos usar o order_by
         category__id=category_id,
@@ -33,8 +28,6 @@ def category(request, category_id):
 
 
 def recipe(request, id):
-    # Outra forma para pegar uma recita
-    # recipe = models.Recipe.objects.all().filter(id=id).first()
 
     recipe = get_object_or_404(models.Recipe, id=id, is_publisher=True)
 
