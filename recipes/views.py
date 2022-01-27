@@ -5,7 +5,9 @@ from . import models
 
 
 def home(request):
-    recipe = get_list_or_404(models.Recipe.objects.all().order_by('?'))
+    recipe = get_list_or_404(models.Recipe.objects.filter(is_publisher=True)
+                             .all()
+                             .order_by('?'))
 
     return render(request, 'recipes/pages/home.html', context={
         'recipes': recipe,
@@ -18,7 +20,8 @@ def category(request, category_id):
     recipes = get_list_or_404(models.Recipe.objects.filter(
         # Mandamos a query inteira, para podermos usar o order_by
         category__id=category_id,
-        is_publisher=True).order_by('?')
+        is_publisher=True)
+        .order_by('?')
     )
 
     return render(request, 'recipes/pages/category.html', context={
