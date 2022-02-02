@@ -17,7 +17,7 @@ class RecipeModelTest(RecipeTestBase):
             author=self.make_author(username='Joaquin'),
             title='Strogonoff de carne',
             description='Strogonoff de carne com ketchup e mostarda',
-            slug='strogonoff-carne',
+            slug='strogonoff-carne-for-no-defaults',
             preparation_time=30,
             preparation_time_unit='Minutos',
             servings=2,
