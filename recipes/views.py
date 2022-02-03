@@ -1,4 +1,5 @@
 # from django.http import Http404
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 
@@ -48,5 +49,19 @@ def search(request):
     if not search_term:
         raise Http404()
 
+    recipes = models.Recipe.objects.filter(
+        # Coloca um OR para verificar o título e a descrição
+        Q(
+            Q(title__icontains=search_term) |
+            Q(description__icontains=search_term)
+            # O icontains verifica se tem a palavra que foi enviada em alguma das receitas # noqa: E501
+        ),
+        is_publisher=True,
+    ).order_by('?')
+
     return render(request, 'recipes/pages/search.html',
-                  {'page_title': f'Search for"{search_term}"', 'search_term': search_term})  # noqa: E501
+                  {
+                      'page_title': f'Search for"{search_term}"',
+                      'search_term': search_term,
+                      'recipes': recipes
+                  })

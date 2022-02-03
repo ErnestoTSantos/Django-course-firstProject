@@ -26,5 +26,28 @@ class RecipeSearchViewTest(RecipeTestBase):
         self.assertIn('Search for&quot;Test&quot;',
                       response.content.decode('utf-8'))
 
+    def test_recipe_search_can_find_by_title(self):
+        title_1 = 'this is recipe one'
+        title_2 = 'this is recipe two'
+
+        recipe_1 = self.make_recipe(
+            slug='one', title=title_1, author_data={'username': 'one'})
+        recipe_2 = self.make_recipe(
+            slug='two', title=title_2, author_data={'username': 'two'})
+
+        url_search = reverse('recipes:search')
+        response_1 = self.client.get(f'{url_search}?search={title_1}')
+        response_2 = self.client.get(f'{url_search}?search={title_2}')
+        response_both = self.client.get(f'{url_search}?search=this')
+
+        self.assertIn(recipe_1, response_1.context['recipes'])
+        self.assertNotIn(recipe_2, response_1.context['recipes'])
+
+        self.assertIn(recipe_2, response_2.context['recipes'])
+        self.assertNotIn(recipe_1, response_2.context['recipes'])
+
+        self.assertIn(recipe_1, response_both.context['recipes'])
+        self.assertIn(recipe_2, response_both.context['recipes'])
+
 
 # RED -- GREEN -- REFACTOR
