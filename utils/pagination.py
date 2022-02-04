@@ -2,6 +2,9 @@ import math
 
 from django.core.paginator import Paginator
 
+# python -c "import string as s;from random import SystemRandom as sr;print(''
+# .join(sr().choices(s.ascii_letters + s.punctuation, k=64)))"
+
 
 def make_pagination_range(page_range, amount_pages, current_page):
 
