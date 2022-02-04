@@ -1,4 +1,5 @@
 # from django.http import Http404
+import os
 
 from django.db.models import Q
 from django.http import Http404
@@ -7,7 +8,8 @@ from utils.pagination import make_pagination
 
 from . import models
 
-PER_PAGE = 12
+# Forma de chamar o valor a partir do .env, para pegar as constantes
+PER_PAGE = os.environ.get('PER_PAGE', 6)
 
 
 def home(request):
