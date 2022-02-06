@@ -9,10 +9,11 @@ from utils.pagination import make_pagination
 from . import models
 
 # Forma de chamar o valor a partir do .env, para pegar as constantes
-PER_PAGE = os.environ.get('PER_PAGE', 6)
+PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 
 
 def home(request):
+
     recipes = get_list_or_404(models.Recipe.objects.filter(is_publisher=True)
                               .all()
                               .order_by('?'))
@@ -56,6 +57,7 @@ def recipe(request, id):
 
 
 def search(request):
+
     search_term = request.GET.get('search', '').strip()
 
     if not search_term:
