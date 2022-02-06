@@ -1,4 +1,5 @@
 from unittest import skip
+from unittest.mock import patch
 
 from django.urls import resolve, reverse
 from recipes import views
@@ -43,3 +44,21 @@ class RecipeHomeViewTest(RecipeTestBase):
         response = self.client.get(reverse('recipes:home'))
         self.assertIn('<h1>No recipes found here</h1>',
                       response.content.decode('utf-8'))
+
+    # Forma de mockar um elemento sem mudar a váriavel de forma dinâmica
+    # @patch('recipes.views.PER_PAGE', new=3)
+    def test_recipe_home_is_paginated(self):
+        for i in range(9):
+            kwargs = {'slug': f'r-{i}', 'author_data': {'username': f'u-{i}'}}
+            self.make_recipe(**kwargs)
+
+        with patch('recipes.views.PER_PAGE', new=3):
+            # Outra maneira de mockar os elementos
+            response = self.client.get(reverse('recipes:home'))
+            recipes = response.context['recipes']
+            paginator = recipes.paginator
+            self.assertEqual(paginator.num_pages, 3)
+            # Verificando quantos elementos tem na página
+            self.assertEqual(len(paginator.get_page(1)), 3)
+            self.assertEqual(len(paginator.get_page(2)), 3)
+            self.assertEqual(len(paginator.get_page(3)), 3)
