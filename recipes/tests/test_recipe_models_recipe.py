@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from parameterized import parameterized
+from recipes.models import Recipe
 
-from ..models import Recipe
 from .test_recipe_base import RecipeTestBase
 
 
