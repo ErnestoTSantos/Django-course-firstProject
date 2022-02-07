@@ -22,6 +22,7 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('recipes.urls')),  # Home do site
+    path('authors/', include('authors.urls')),  # Criação de autores
 ]
 
 # Forma de chamar os arquivos no media da raiz
