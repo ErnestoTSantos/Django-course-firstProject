@@ -77,7 +77,7 @@ def search(request):
 
     return render(request, 'recipes/pages/search.html',
                   {
-                      'page_title': f'Search for"{search_term}"',
+                      'page_title': f'Search for "{search_term}"',
                       'search_term': search_term,
                       'recipes': page_object,
                       'pagination_range': pagination_range,
