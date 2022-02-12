@@ -1,26 +1,28 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.forms import ValidationError
 
 
 def add_attr(field, attr_name, attr_new_value):
+    # Função para adicionar coisas aos campos
     existing_attr = field.widget.attrs.get(attr_name, '')
     field.widget.attrs[attr_name] = f'{existing_attr} {attr_new_value}'.strip()
 
 
 def add_placeholder(field, attr_new_value):
-    field.widget.attrs['placeholder'] = f'{attr_new_value}'.strip()
+    add_attr(field, 'placeholder', attr_new_value)
 
 
 class RegisterForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        add_attr(self.fields['username'], 'placeholder', 'Ex.: Doctor')
-        add_attr(self.fields['last_name'], 'placeholder',
-                 'Digite seu sobrenome aqui')
+        add_placeholder(self.fields['username'], 'Ex.: Doctor')
+        add_placeholder(self.fields['last_name'], 'Digite seu sobrenome aqui')
         add_attr(
             self.fields['email'], 'placeholder', 'Ex.: exemplo@exemplo.com.br'  # noqa: E501
         )
+        # add_attr(self.fields['username'], 'css', 'a-css-class')
 
     password_2 = forms.CharField(
         required=True,
@@ -37,6 +39,7 @@ class RegisterForm(forms.ModelForm):
             'username',
             'email',
             'password',
+            'password_2'
         ]
         labels = {
             'first_name': 'Primeiro nome',
@@ -65,3 +68,47 @@ class RegisterForm(forms.ModelForm):
                 'placeholder': 'Digite uma senha aqui'
             })
         }
+    """
+    Forma de fazer validação por campo específico, sendo apenas do User
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+
+        if 6 > len(password):
+            raise ValidationError(
+                'A senha precisa ter no mínimo 6 caracteres!'
+            )
+
+        return password
+    """
+
+    def clean_first_name(self):
+        data = self.cleaned_data.get('first_name')
+
+        if 3 > len(data):
+            raise ValidationError(
+                'O nome precisa ter no mínimo 3 caracteres!'
+            )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        password = cleaned_data.get('password')
+        password_2 = cleaned_data.get('password_2')
+
+        print(cleaned_data)
+
+        if 6 > len(password):
+            raise ValidationError(
+                'A senha precisa ter no mínimo 6 caracteres!'
+            )
+
+        if password != password_2:
+            password_confirmation_error = ValidationError(
+                'As senhas precisam ser iguais!',
+                code='invalid'
+            )
+            raise ValidationError({
+                'password': password_confirmation_error,
+                'password_2': [password_confirmation_error]
+            })
