@@ -31,6 +31,7 @@ def category(request, category_id):
     # Iremos receber uma lista para que possamos pegar o primeiro valor
     recipes = get_list_or_404(models.Recipe.objects.filter(
         # Mandamos a query inteira, para podermos usar o order_by
+        # Colocamos dois _, para que possamos acessar o elemento da outra classe
         category__id=category_id,
         is_publisher=True)
         .order_by('?')
